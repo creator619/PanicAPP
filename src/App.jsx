@@ -215,8 +215,8 @@ function App() {
               setExerciseType('breathing');
             }}
             style={{ 
-              backgroundColor: '#FF6B6B', 
-              color: 'white', 
+              backgroundColor: '#98FF98', 
+              color: '#1A202C', 
               padding: '10px 20px', 
               borderRadius: '12px',
               fontSize: '1rem',
@@ -225,7 +225,7 @@ function App() {
               cursor: 'pointer'
             }}
           >
-            BEFEJEZÉS
+            MEGNYUGODTAM
           </button>
 
           <button 
