@@ -51,15 +51,42 @@ const CognitiveDistraction = () => {
   };
 
   const startCamera = async () => {
+    setCameraActive(true);
+    setCapturedImage(null);
+    
+    const constraints = {
+      video: { 
+        facingMode: { ideal: 'environment' },
+        width: { ideal: 1280 },
+        height: { ideal: 720 }
+      }
+    };
+
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        setCameraActive(true);
+        // Explicitly call play for better compatibility
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current.play().catch(e => console.error("Video play error:", e));
+        };
       }
     } catch (err) {
       console.error("Camera error:", err);
-      alert("Nem sikerült elérni a kamerát. Ellenőrizd a jogosultságokat!");
+      // Fallback to any available camera if 'environment' fails
+      try {
+        const fallbackStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        if (videoRef.current) {
+          videoRef.current.srcObject = fallbackStream;
+          videoRef.current.onloadedmetadata = () => {
+            videoRef.current.play().catch(e => console.error("Video play error:", e));
+          };
+        }
+      } catch (fallbackErr) {
+        console.error("Fallback camera error:", fallbackErr);
+        alert("Nem sikerült elérni a kamerát. Kérlek, engedélyezd a hozzáférést a böngésző beállításaiban!");
+        setCameraActive(false);
+      }
     }
   };
 
@@ -246,7 +273,13 @@ const CognitiveDistraction = () => {
               </>
             ) : (
               <>
-                <video ref={videoRef} autoPlay playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <video 
+                  ref={videoRef} 
+                  autoPlay 
+                  playsInline 
+                  muted 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                />
                 <button 
                   onClick={capturePhoto}
                   style={{
