@@ -1,41 +1,42 @@
 import React, { useState } from 'react';
 import { Eye, Hand, Volume2, Wind, Utensils, ChevronRight, CheckCircle2 } from 'lucide-react';
 
-const GroundingExercise = ({ onComplete }) => {
+const GroundingExercise = ({ onComplete, intensity }) => {
   const [step, setStep] = useState(0);
+  const isFull = intensity === 'full';
 
   const steps = [
     {
       title: "5 dolog, amit látsz",
-      description: "Nézz körül, és nevezz meg 5 tárgyat magad körül.",
+      description: isFull ? "Nevezz meg 5 tárgyat magad körül." : "Nézz körül, és nevezz meg 5 tárgyat magad körül.",
       icon: <Eye size={48} />,
       color: "#AEC6CF",
       count: 5
     },
     {
       title: "4 dolog, amit érzel",
-      description: "Figyelj a testedre, és keress 4 dolgot, amit érzel (pl. ruha érintése, szék alattad).",
+      description: isFull ? "Keress 4 dolgot, amit érzel." : "Figyelj a testedre, és keress 4 dolgot, amit érzel (pl. ruha érintése, szék alattad).",
       icon: <Hand size={48} />,
       color: "#B39EB5",
       count: 4
     },
     {
       title: "3 dolog, amit hallasz",
-      description: "Figyelj a környezeted zajaira, és azonosíts 3 hangot.",
+      description: isFull ? "Azonosíts 3 hangot." : "Figyelj a környezeted zajaira, és azonosíts 3 hangot.",
       icon: <Volume2 size={48} />,
       color: "#FFD1DC",
       count: 3
     },
     {
       title: "2 dolog, amit érzel (szaglás)",
-      description: "Próbálj meg érezni 2 különböző illatot a környezetedben.",
+      description: isFull ? "Érezz 2 illatot." : "Próbálj meg érezni 2 különböző illatot a környezetedben.",
       icon: <Wind size={48} />,
       color: "#FDFD96",
       count: 2
     },
     {
       title: "1 dolog, amit ízlelsz",
-      description: "Figyelj az ízre a szádban, vagy gondolj egy kedvenc ízedre.",
+      description: isFull ? "Figyelj egy ízre." : "Figyelj az ízre a szádban, vagy gondolj egy kedvenc ízedre.",
       icon: <Utensils size={48} />,
       color: "#98FF98",
       count: 1

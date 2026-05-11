@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-const BreathingCircle = () => {
-  const [phase, setPhase] = useState('Vegyél mély levegőt...');
+const BreathingCircle = ({ intensity }) => {
+  const isFull = intensity === 'full';
+  const [phase, setPhase] = useState(isFull ? 'LÉLEGEZZ BE' : 'Vegyél mély levegőt...');
   const [canVibrate, setCanVibrate] = useState('vibrate' in navigator);
 
   useEffect(() => {
-    // 0-4s: Inhale
-    // 4-5s: Hold
-    // 5-9s: Exhale
-    // 9-10s: Hold
     let timeoutIds = [];
     
     const vibrate = (pattern) => {
@@ -20,27 +17,24 @@ const BreathingCircle = () => {
         }
       }
     };
-
+    
     const cycle = () => {
       // Inhale starts
-      setPhase('Vegyél mély levegőt...');
+      setPhase(isFull ? 'LÉLEGEZZ BE' : 'Vegyél mély levegőt...');
       vibrate([150]); 
 
       timeoutIds.push(setTimeout(() => {
-        // Hold starts
-        setPhase('Tartsd bent...');
+        setPhase(isFull ? 'TARTSD BENT' : 'Tartsd bent...');
         vibrate([50, 100, 50]); 
       }, 4000));
 
       timeoutIds.push(setTimeout(() => {
-        // Exhale starts
-        setPhase('Fújd ki lassan...');
+        setPhase(isFull ? 'FÚJD KI' : 'Fújd ki lassan...');
         vibrate([400]); 
       }, 5000));
 
       timeoutIds.push(setTimeout(() => {
-        // Hold starts
-        setPhase('Tartsd bent...');
+        setPhase(isFull ? 'PIHENJ' : 'Tartsd bent...');
         vibrate([50]);
       }, 9000));
     };

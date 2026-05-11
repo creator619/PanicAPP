@@ -11,6 +11,7 @@ import BuddySystem from './components/BuddySystem';
 import BlindFlightModal from './components/BlindFlightModal';
 import PostPanicCare from './components/PostPanicCare';
 import DigitalHelpCard from './components/DigitalHelpCard';
+import IntensitySelector from './components/IntensitySelector';
 import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music, Activity, ShieldCheck, Brain, Users, MessageSquare } from 'lucide-react';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [showBlindFlight, setShowBlindFlight] = useState(false);
   const [showHelpCard, setShowHelpCard] = useState(false);
+  const [panicIntensity, setPanicIntensity] = useState(null); // null, 'mild', 'full'
 
   useEffect(() => {
     if (isPanicMode) {
@@ -34,6 +36,7 @@ function App() {
       document.body.classList.remove('panic-mode');
       setExerciseType('breathing');
       setShowBlindFlight(false);
+      setPanicIntensity(null);
     }
   }, [isPanicMode]);
 
@@ -338,18 +341,27 @@ function App() {
           </p>
         </div>
 
-        {exerciseType === 'breathing' ? (
-          <BreathingCircle />
-        ) : exerciseType === 'grounding' ? (
-          <GroundingExercise onComplete={() => setExerciseType('sounds')} />
-        ) : exerciseType === 'sounds' ? (
-          <SoundPlayer />
-        ) : exerciseType === 'safeplace' ? (
-          <SafePlace />
-        ) : exerciseType === 'distraction' ? (
-          <CognitiveDistraction />
+        {!panicIntensity ? (
+          <IntensitySelector onSelect={setPanicIntensity} />
         ) : (
-          <BuddySystem />
+          <>
+            {exerciseType === 'breathing' ? (
+              <BreathingCircle intensity={panicIntensity} />
+            ) : exerciseType === 'grounding' ? (
+              <GroundingExercise 
+                intensity={panicIntensity} 
+                onComplete={() => setExerciseType('sounds')} 
+              />
+            ) : exerciseType === 'sounds' ? (
+              <SoundPlayer />
+            ) : exerciseType === 'safeplace' ? (
+              <SafePlace />
+            ) : exerciseType === 'distraction' ? (
+              <CognitiveDistraction />
+            ) : (
+              <BuddySystem />
+            )}
+          </>
         )}
 
         <div style={{ textAlign: 'center', marginTop: 'auto', paddingBottom: '40px', opacity: 0.6 }}>

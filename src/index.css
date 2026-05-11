@@ -303,3 +303,28 @@ button {
   margin-top: auto;
   margin-bottom: auto;
 }
+
+.intensity-btn {
+  width: 100%;
+  padding: 25px;
+  border-radius: 25px;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.intensity-btn.mild {
+  background-color: rgba(179, 158, 181, 0.1);
+  border-color: #B39EB5;
+  color: #2D3748;
+}
+
+.intensity-btn.full {
+  background-color: #FF6B6B;
+  color: white;
+  box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+}
