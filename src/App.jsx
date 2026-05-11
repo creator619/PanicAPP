@@ -283,6 +283,18 @@ function App() {
                 <Anchor size={24} /> Földelés
               </button>
               <button 
+                onClick={() => setExerciseType('sounds')} 
+                style={{ backgroundColor: exerciseType === 'sounds' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '10px', padding: '15px' }}
+              >
+                <Music size={24} /> Hangok
+              </button>
+              <button 
+                onClick={() => setExerciseType('safeplace')} 
+                style={{ backgroundColor: exerciseType === 'safeplace' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '10px', padding: '15px' }}
+              >
+                <ShieldCheck size={24} /> Menedék
+              </button>
+              <button 
                 onClick={() => setExerciseType('ai')} 
                 style={{ backgroundColor: exerciseType === 'ai' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '10px', padding: '15px' }}
               >
@@ -293,6 +305,12 @@ function App() {
                 style={{ backgroundColor: exerciseType === 'distraction' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '10px', padding: '15px' }}
               >
                 <Brain size={24} /> Játék
+              </button>
+              <button 
+                onClick={() => setExerciseType('buddy')} 
+                style={{ backgroundColor: exerciseType === 'buddy' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '10px', padding: '15px' }}
+              >
+                <Users size={24} /> Segítő
               </button>
             </div>
 
