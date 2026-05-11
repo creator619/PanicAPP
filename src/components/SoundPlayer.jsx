@@ -5,6 +5,7 @@ const SoundPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSound, setCurrentSound] = useState(null);
   const [volume, setVolume] = useState(0.5);
+  const [error, setError] = useState(null);
   const audioRef = useRef(null);
 
   const sounds = [
@@ -12,21 +13,21 @@ const SoundPlayer = () => {
       id: 'rain',
       name: 'Eső',
       icon: <CloudRain size={24} />,
-      url: 'https://actions.google.com/sounds/v1/water/rain_on_roof.ogg',
+      url: 'https://www.soundjay.com/nature/sounds/rain-01.mp3',
       color: '#AEC6CF'
     },
     {
       id: 'waves',
       name: 'Hullámok',
       icon: <Waves size={24} />,
-      url: 'https://actions.google.com/sounds/v1/water/waves_crashing_on_shore.ogg',
+      url: 'https://www.soundjay.com/nature/sounds/ocean-wave-1.mp3',
       color: '#B39EB5'
     },
     {
       id: 'forest',
       name: 'Erdő',
       icon: <TreePine size={24} />,
-      url: 'https://actions.google.com/sounds/v1/ambient/morning_forest.ogg',
+      url: 'https://www.soundjay.com/nature/sounds/forest-birds-01.mp3',
       color: '#98FF98'
     }
   ];
@@ -37,22 +38,47 @@ const SoundPlayer = () => {
     }
   }, [volume]);
 
+  // Handle source changes and auto-play
+  useEffect(() => {
+    if (currentSound && audioRef.current) {
+      audioRef.current.src = currentSound.url;
+      audioRef.current.load();
+      if (isPlaying) {
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(err => {
+            console.error("Playback failed:", err);
+            setIsPlaying(false);
+            if (err.name === 'NotAllowedError') {
+              setError("Kérlek kattints a lejátszáshoz (böngésző korlátozás)");
+            } else {
+              setError("Hiba a hang betöltésekor");
+            }
+          });
+        }
+      }
+    }
+  }, [currentSound]);
+
   const togglePlay = (sound) => {
+    setError(null);
     if (currentSound?.id === sound.id) {
       if (isPlaying) {
         audioRef.current.pause();
         setIsPlaying(false);
       } else {
-        audioRef.current.play();
-        setIsPlaying(true);
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => setIsPlaying(true))
+          .catch(err => {
+            setError("Lejátszási hiba");
+            setIsPlaying(false);
+          });
+        }
       }
     } else {
       setCurrentSound(sound);
       setIsPlaying(true);
-      if (audioRef.current) {
-        audioRef.current.src = sound.url;
-        audioRef.current.play();
-      }
     }
   };
 
@@ -79,6 +105,19 @@ const SoundPlayer = () => {
       }}>
         <h2 style={{ color: 'white', marginBottom: '20px', fontSize: '1.4rem' }}>Nyugtató hangok</h2>
         
+        {error && (
+          <div style={{ 
+            backgroundColor: 'rgba(255, 0, 0, 0.2)', 
+            color: '#FFBABA', 
+            padding: '10px', 
+            borderRadius: '10px', 
+            marginBottom: '15px',
+            fontSize: '0.8rem'
+          }}>
+            {error}
+          </div>
+        )}
+
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px', marginBottom: '30px' }}>
           {sounds.map((sound) => (
             <button
@@ -147,7 +186,11 @@ const SoundPlayer = () => {
           </div>
         )}
 
-        <audio ref={audioRef} loop />
+        <audio 
+          ref={audioRef} 
+          loop 
+          onError={() => setError("Hiba a hangfájl betöltésekor. Ellenőrizd az internetkapcsolatot.")}
+        />
       </div>
 
       <style>
