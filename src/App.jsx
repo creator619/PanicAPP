@@ -9,12 +9,14 @@ import SafePlace from './components/SafePlace';
 import CognitiveDistraction from './components/CognitiveDistraction';
 import BuddySystem from './components/BuddySystem';
 import BlindFlightModal from './components/BlindFlightModal';
+import PostPanicCare from './components/PostPanicCare';
 import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music, Activity, ShieldCheck, Brain, Users } from 'lucide-react';
 
 function App() {
   const [isPanicMode, setIsPanicMode] = useState(false);
   const [exerciseType, setExerciseType] = useState('breathing'); // 'breathing', 'grounding', 'sounds'
   const [screen, setScreen] = useState('home'); // 'home', 'journal', 'sos'
+  const [isPostPanic, setIsPostPanic] = useState(false);
   const [showHRMonitor, setShowHRMonitor] = useState(false);
   const [lastBpm, setLastBpm] = useState(null);
   const [showHRPrompt, setShowHRPrompt] = useState(false);
@@ -286,7 +288,10 @@ function App() {
             </button>
           </div>
           <button 
-            onClick={() => setIsPanicMode(false)}
+            onClick={() => {
+              setIsPanicMode(false);
+              setIsPostPanic(true);
+            }}
             style={{ 
               background: 'transparent', 
               color: '#F7FAFC', 
@@ -344,6 +349,10 @@ function App() {
         )}
       </div>
     );
+  }
+
+  if (isPostPanic) {
+    return <PostPanicCare onComplete={() => setIsPostPanic(false)} />;
   }
 
   return (

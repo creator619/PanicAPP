@@ -224,3 +224,40 @@ button {
   padding: 20px;
   backdrop-filter: blur(5px);
 }
+
+.recovery-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  animation: fadeIn 0.8s ease;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: white;
+  padding: 18px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.checklist-item.checked {
+  opacity: 0.6;
+  border-color: #48BB78;
+}
+
+.checklist-item.checked span {
+  text-decoration: line-through;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
