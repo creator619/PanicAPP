@@ -8,6 +8,7 @@ import HeartRateMonitor from './components/HeartRateMonitor';
 import SafePlace from './components/SafePlace';
 import CognitiveDistraction from './components/CognitiveDistraction';
 import BuddySystem from './components/BuddySystem';
+import BlindFlightModal from './components/BlindFlightModal';
 import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music, Activity, ShieldCheck, Brain, Users } from 'lucide-react';
 
 function App() {
@@ -17,15 +18,51 @@ function App() {
   const [showHRMonitor, setShowHRMonitor] = useState(false);
   const [lastBpm, setLastBpm] = useState(null);
   const [showHRPrompt, setShowHRPrompt] = useState(false);
+  const [lastActivity, setLastActivity] = useState(Date.now());
+  const [showBlindFlight, setShowBlindFlight] = useState(false);
 
   useEffect(() => {
     if (isPanicMode) {
       document.body.classList.add('panic-mode');
+      setLastActivity(Date.now());
+      setShowBlindFlight(false);
     } else {
       document.body.classList.remove('panic-mode');
       setExerciseType('breathing');
+      setShowBlindFlight(false);
     }
   }, [isPanicMode]);
+
+  // Inactivity monitoring logic
+  useEffect(() => {
+    if (!isPanicMode || showBlindFlight) return;
+
+    const checkInactivity = setInterval(() => {
+      const now = Date.now();
+      const inactivityThreshold = 120000; // 2 minutes
+      
+      if (now - lastActivity > inactivityThreshold) {
+        setShowBlindFlight(true);
+      }
+    }, 5000);
+
+    const handleInteraction = () => {
+      setLastActivity(Date.now());
+    };
+
+    window.addEventListener('mousedown', handleInteraction);
+    window.addEventListener('touchstart', handleInteraction);
+    window.addEventListener('keydown', handleInteraction);
+    window.addEventListener('scroll', handleInteraction);
+
+    return () => {
+      clearInterval(checkInactivity);
+      window.removeEventListener('mousedown', handleInteraction);
+      window.removeEventListener('touchstart', handleInteraction);
+      window.removeEventListener('keydown', handleInteraction);
+      window.removeEventListener('scroll', handleInteraction);
+    };
+  }, [isPanicMode, lastActivity, showBlindFlight]);
 
   const handleHRResult = (bpm) => {
     setLastBpm(bpm);
@@ -295,6 +332,16 @@ function App() {
         <div style={{ textAlign: 'center', marginTop: 'auto', paddingBottom: '40px', opacity: 0.6 }}>
           <p style={{ fontSize: '1.2rem' }}>Ez csak egy roham. El fog múlni.</p>
         </div>
+
+        {showBlindFlight && (
+          <BlindFlightModal 
+            buddyName={localStorage.getItem('buddyName')} 
+            onCancel={() => {
+              setShowBlindFlight(false);
+              setLastActivity(Date.now());
+            }} 
+          />
+        )}
       </div>
     );
   }
