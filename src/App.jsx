@@ -12,7 +12,8 @@ import BlindFlightModal from './components/BlindFlightModal';
 import PostPanicCare from './components/PostPanicCare';
 import DigitalHelpCard from './components/DigitalHelpCard';
 import IntensitySelector from './components/IntensitySelector';
-import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music, Activity, ShieldCheck, Brain, Users, MessageSquare } from 'lucide-react';
+import AICopilot from './components/AICopilot';
+import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music, Activity, ShieldCheck, Brain, Users, MessageSquare, Sparkles } from 'lucide-react';
 
 function App() {
   const [isPanicMode, setIsPanicMode] = useState(false);
@@ -276,6 +277,22 @@ function App() {
               <Brain size={14} /> Játék
             </button>
             <button 
+              onClick={() => setExerciseType('ai')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '20px',
+                backgroundColor: exerciseType === 'ai' ? 'rgba(255,255,255,0.2)' : 'transparent',
+                color: 'white',
+                border: '1px solid rgba(255,255,255,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '0.85rem'
+              }}
+            >
+              <Sparkles size={14} /> AI
+            </button>
+            <button 
               onClick={() => setExerciseType('buddy')}
               style={{
                 padding: '6px 12px',
@@ -358,6 +375,8 @@ function App() {
               <SafePlace />
             ) : exerciseType === 'distraction' ? (
               <CognitiveDistraction />
+            ) : exerciseType === 'ai' ? (
+              <AICopilot />
             ) : (
               <BuddySystem />
             )}
