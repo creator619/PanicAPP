@@ -44,9 +44,15 @@ const BlindFlightModal = ({ onCancel, buddyName }) => {
     const savedBuddyName = buddyName || localStorage.getItem('buddyName') || "Segítőm";
     const message = encodeURIComponent(`${savedBuddyName}, épp pánikrohamot élek át ezen a helyszínen, nézz rám! Helyszín: ${locationLink}`);
     
-    // Try to find a phone number from SOS contacts
-    const contacts = JSON.parse(localStorage.getItem('sosContacts') || '[]');
-    const primaryPhone = contacts.length > 0 ? contacts[0].phone : '';
+    // Try to find a personal (non-system) phone number from SOS contacts
+    const contacts = JSON.parse(localStorage.getItem('sos_contacts') || '[]');
+    const personalContact = contacts.find(c => !c.isSystem && c.phone);
+    const primaryPhone = personalContact ? personalContact.phone : '';
+    
+    if (!primaryPhone) {
+      console.warn('Nincs személyes SOS kontakt beállítva!');
+      // Still open SMS app, user can manually pick a contact
+    }
     
     const smsUri = `sms:${primaryPhone}?body=${message}`;
     window.location.href = smsUri;

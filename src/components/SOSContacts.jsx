@@ -6,8 +6,8 @@ const SOSContacts = () => {
   const [contacts, setContacts] = useState(() => {
     const saved = localStorage.getItem('sos_contacts');
     return saved ? JSON.parse(saved) : [
-      { id: 1, name: 'Általános segélyhívó', number: '112', isSystem: true },
-      { id: 2, name: 'Lelki Elsősegély', number: '116-123', isSystem: true }
+      { id: 1, name: 'Általános segélyhívó', phone: '112', isSystem: true },
+      { id: 2, name: 'Lelki Elsősegély', phone: '116-123', isSystem: true }
     ];
   });
 
@@ -20,10 +20,25 @@ const SOSContacts = () => {
     localStorage.setItem('sos_contacts', JSON.stringify(contacts));
   }, [contacts]);
 
+  // Migrate old contacts that used 'number' property to 'phone'
+  useEffect(() => {
+    const needsMigration = contacts.some(c => c.number && !c.phone);
+    if (needsMigration) {
+      const migrated = contacts.map(c => {
+        if (c.number && !c.phone) {
+          const { number, ...rest } = c;
+          return { ...rest, phone: number };
+        }
+        return c;
+      });
+      setContacts(migrated);
+    }
+  }, []);
+
   const addContact = (e) => {
     e.preventDefault();
     if (newName && newNumber) {
-      setContacts([...contacts, { id: Date.now(), name: newName, number: newNumber, isSystem: false }]);
+      setContacts([...contacts, { id: Date.now(), name: newName, phone: newNumber, isSystem: false }]);
       setNewName('');
       setNewNumber('');
       setShowAdd(false);
@@ -78,11 +93,11 @@ const SOSContacts = () => {
           }}>
             <div>
               <h3 style={{ fontWeight: 'bold', color: '#2D3748', fontSize: '1.1rem' }}>{contact.name}</h3>
-              <p style={{ color: '#4A5568', fontSize: '1.2rem', fontWeight: 'bold', marginTop: '5px' }}>{contact.number}</p>
+              <p style={{ color: '#4A5568', fontSize: '1.2rem', fontWeight: 'bold', marginTop: '5px' }}>{contact.phone}</p>
             </div>
             <div style={{ display: 'flex', gap: '10px' }}>
               <a 
-                href={`tel:${contact.number}`}
+                href={`tel:${contact.phone}`}
                 style={{ 
                   backgroundColor: contact.isSystem ? '#EBF4FF' : '#F0FFF4',
                   color: contact.isSystem ? '#3182CE' : '#38A169',
