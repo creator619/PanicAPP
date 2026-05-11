@@ -211,6 +211,7 @@ function App() {
           <button 
             onClick={() => {
               setIsPanicMode(false);
+              setIsPostPanic(true);
               setExerciseType('breathing');
             }}
             style={{ 
