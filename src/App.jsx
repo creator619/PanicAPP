@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import BreathingCircle from './components/BreathingCircle';
 import GroundingExercise from './components/GroundingExercise';
-import { HeartPulse, Home, Phone, Book, Wind, Anchor } from 'lucide-react';
+import SoundPlayer from './components/SoundPlayer';
+import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music } from 'lucide-react';
 
 function App() {
   const [isPanicMode, setIsPanicMode] = useState(false);
-  const [exerciseType, setExerciseType] = useState('breathing'); // 'breathing' or 'grounding'
+  const [exerciseType, setExerciseType] = useState('breathing'); // 'breathing', 'grounding', 'sounds'
 
   useEffect(() => {
     if (isPanicMode) {
@@ -20,11 +21,11 @@ function App() {
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', padding: '20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             <button 
               onClick={() => setExerciseType('breathing')}
               style={{
-                padding: '8px 16px',
+                padding: '6px 12px',
                 borderRadius: '20px',
                 backgroundColor: exerciseType === 'breathing' ? 'rgba(255,255,255,0.2)' : 'transparent',
                 color: 'white',
@@ -32,15 +33,15 @@ function App() {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                fontSize: '0.9rem'
+                fontSize: '0.85rem'
               }}
             >
-              <Wind size={16} /> Légzés
+              <Wind size={14} /> Légzés
             </button>
             <button 
               onClick={() => setExerciseType('grounding')}
               style={{
-                padding: '8px 16px',
+                padding: '6px 12px',
                 borderRadius: '20px',
                 backgroundColor: exerciseType === 'grounding' ? 'rgba(255,255,255,0.2)' : 'transparent',
                 color: 'white',
@@ -48,10 +49,26 @@ function App() {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                fontSize: '0.9rem'
+                fontSize: '0.85rem'
               }}
             >
-              <Anchor size={16} /> Földelés
+              <Anchor size={14} /> Földelés
+            </button>
+            <button 
+              onClick={() => setExerciseType('sounds')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '20px',
+                backgroundColor: exerciseType === 'sounds' ? 'rgba(255,255,255,0.2)' : 'transparent',
+                color: 'white',
+                border: '1px solid rgba(255,255,255,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '0.85rem'
+              }}
+            >
+              <Music size={14} /> Hangok
             </button>
           </div>
           <button 
@@ -61,26 +78,30 @@ function App() {
               color: '#F7FAFC', 
               display: 'flex', 
               alignItems: 'center', 
-              gap: '8px',
-              padding: '10px',
-              fontSize: '1rem'
+              gap: '6px',
+              padding: '8px',
+              fontSize: '0.9rem'
             }}
           >
             Befejezés
           </button>
         </div>
         
-        <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>
-          <h1 style={{ fontSize: '2rem', marginBottom: '10px', color: '#98FF98' }}>Biztonságban vagy</h1>
-          <p style={{ opacity: 0.8 }}>
-            {exerciseType === 'breathing' ? 'Koncentrálj a légzésedre.' : 'Koncentrálj a környezetedre.'}
+        <div style={{ textAlign: 'center', marginTop: '15px', marginBottom: '15px' }}>
+          <h1 style={{ fontSize: '1.8rem', marginBottom: '5px', color: '#98FF98' }}>Biztonságban vagy</h1>
+          <p style={{ opacity: 0.8, fontSize: '0.9rem' }}>
+            {exerciseType === 'breathing' ? 'Koncentrálj a légzésedre.' : 
+             exerciseType === 'grounding' ? 'Koncentrálj a környezetedre.' : 
+             'Hallgasd a nyugtató hangokat.'}
           </p>
         </div>
 
         {exerciseType === 'breathing' ? (
           <BreathingCircle />
+        ) : exerciseType === 'grounding' ? (
+          <GroundingExercise onComplete={() => setExerciseType('sounds')} />
         ) : (
-          <GroundingExercise onComplete={() => setExerciseType('breathing')} />
+          <SoundPlayer />
         )}
 
         <div style={{ textAlign: 'center', marginTop: 'auto', paddingBottom: '40px', opacity: 0.6 }}>
