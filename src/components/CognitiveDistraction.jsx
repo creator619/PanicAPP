@@ -41,7 +41,9 @@ const CognitiveDistraction = () => {
       setMathFeedback('wrong');
       setStreak(0);
     }
-    // Color Finder Logic
+  };
+
+  // Color Finder Logic
   const startColorFinder = () => {
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
     setTargetColor(randomColor);
