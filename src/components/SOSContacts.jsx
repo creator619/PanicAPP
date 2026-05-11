@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, UserPlus, Trash2, Heart } from 'lucide-react';
+import { Phone, UserPlus, Trash2, Heart, Volume2 } from 'lucide-react';
+import EmergencyAssistant from './EmergencyAssistant';
 
 const SOSContacts = () => {
   const [contacts, setContacts] = useState(() => {
@@ -13,6 +14,7 @@ const SOSContacts = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [showAdd, setShowAdd] = useState(false);
+  const [showAssistant, setShowAssistant] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('sos_contacts', JSON.stringify(contacts));
@@ -41,6 +43,28 @@ const SOSContacts = () => {
       </header>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        <button 
+          onClick={() => setShowAssistant(true)}
+          style={{
+            backgroundColor: '#FF6B6B',
+            color: 'white',
+            padding: '20px',
+            borderRadius: '20px',
+            border: 'none',
+            fontWeight: 'bold',
+            fontSize: '1.2rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '12px',
+            marginBottom: '10px',
+            boxShadow: '0 10px 20px rgba(255, 107, 107, 0.2)',
+            cursor: 'pointer'
+          }}
+        >
+          <Volume2 size={24} /> Mentő hívása segéddel
+        </button>
+
         {contacts.map(contact => (
           <div key={contact.id} style={{ 
             backgroundColor: 'white', 
@@ -161,6 +185,10 @@ const SOSContacts = () => {
             </button>
           </div>
         </form>
+      )}
+
+      {showAssistant && (
+        <EmergencyAssistant onCancel={() => setShowAssistant(false)} />
       )}
     </div>
   );
