@@ -55,7 +55,7 @@ const BreathingCircle = ({ intensity }) => {
   return (
     <div className="breathing-circle-container">
       <div className="breathing-circle"></div>
-      <div className="breathing-text">{phase}</div>
+      <div className="breathing-text" style={{ fontSize: '2.5rem', fontWeight: '900' }}>{phase}</div>
       {!canVibrate && (
         <div style={{ position: 'absolute', bottom: '20px', fontSize: '0.7rem', opacity: 0.5 }}>
           A rezgés ezen az eszközön nem támogatott (pl. iOS/Safari).

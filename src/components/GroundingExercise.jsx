@@ -86,8 +86,8 @@ const GroundingExercise = ({ onComplete, intensity }) => {
           {current.icon}
         </div>
 
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white' }}>{current.title}</h2>
-        <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6', fontSize: '1.1rem' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: '900', color: 'white', textTransform: 'uppercase' }}>{current.title}</h2>
+        <p style={{ color: 'white', lineHeight: '1.4', fontSize: '1.4rem', fontWeight: '700' }}>
           {current.description}
         </p>
 
@@ -109,28 +109,27 @@ const GroundingExercise = ({ onComplete, intensity }) => {
         <button 
           onClick={nextStep}
           style={{
-            marginTop: '20px',
-            padding: '15px 40px',
-            borderRadius: '30px',
+            marginTop: '30px',
+            width: '100%',
+            padding: '25px',
+            borderRadius: '20px',
             backgroundColor: current.color,
             color: '#1a202c',
-            fontWeight: 'bold',
-            fontSize: '1.1rem',
+            fontWeight: '900',
+            fontSize: '1.5rem',
             border: 'none',
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
+            justifyContent: 'center',
+            gap: '15px',
             cursor: 'pointer',
-            transition: 'transform 0.2s ease',
-            boxShadow: `0 4px 15px ${current.color}44`
+            boxShadow: `0 10px 25px ${current.color}66`
           }}
-          onMouseDown={e => e.currentTarget.style.transform = 'scale(0.95)'}
-          onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
         >
           {step < steps.length - 1 ? (
-            <>Következő <ChevronRight size={20} /></>
+            <>KÖVETKEZŐ <ChevronRight size={28} /></>
           ) : (
-            <>Kész <CheckCircle2 size={20} /></>
+            <>KÉSZ <CheckCircle2 size={28} /></>
           )}
         </button>
       </div>

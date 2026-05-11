@@ -27,6 +27,15 @@ function App() {
   const [showBlindFlight, setShowBlindFlight] = useState(false);
   const [showHelpCard, setShowHelpCard] = useState(false);
   const [panicIntensity, setPanicIntensity] = useState(null); // null, 'mild', 'full'
+  const [taps, setTaps] = useState([]);
+
+  const addTap = (e) => {
+    const newTap = { id: Date.now(), x: e.clientX, y: e.clientY };
+    setTaps(prev => [...prev, newTap]);
+    setTimeout(() => {
+      setTaps(prev => prev.filter(t => t.id !== newTap.id));
+    }, 600);
+  };
 
   useEffect(() => {
     if (isPanicMode) {
@@ -192,176 +201,101 @@ function App() {
               from { opacity: 0; transform: translateY(20px); }
               to { opacity: 1; transform: translateY(0); }
             }
+            .tap-feedback { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.5); pointer-events: none; transform: translate(-50%, -50%); animation: fadeOut 0.6s forwards; }
+            @keyframes fadeOut { to { transform: translate(-50%, -50%) scale(3); opacity: 0; } }
+            .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
           `}
         </style>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            <button 
-              onClick={() => setExerciseType('breathing')}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '20px',
-                backgroundColor: exerciseType === 'breathing' ? 'rgba(255,255,255,0.2)' : 'transparent',
-                color: 'white',
-                border: '1px solid rgba(255,255,255,0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '0.85rem'
-              }}
-            >
-              <Wind size={14} /> Légzés
-            </button>
-            <button 
-              onClick={() => setExerciseType('grounding')}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '20px',
-                backgroundColor: exerciseType === 'grounding' ? 'rgba(255,255,255,0.2)' : 'transparent',
-                color: 'white',
-                border: '1px solid rgba(255,255,255,0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '0.85rem'
-              }}
-            >
-              <Anchor size={14} /> Földelés
-            </button>
-            <button 
-              onClick={() => setExerciseType('sounds')}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '20px',
-                backgroundColor: exerciseType === 'sounds' ? 'rgba(255,255,255,0.2)' : 'transparent',
-                color: 'white',
-                border: '1px solid rgba(255,255,255,0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '0.85rem'
-              }}
-            >
-              <Music size={14} /> Hangok
-            </button>
-            <button 
-              onClick={() => setExerciseType('safeplace')}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '20px',
-                backgroundColor: exerciseType === 'safeplace' ? 'rgba(255,255,255,0.2)' : 'transparent',
-                color: 'white',
-                border: '1px solid rgba(255,255,255,0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '0.85rem'
-              }}
-            >
-              <ShieldCheck size={14} /> Menedék
-            </button>
-            <button 
-              onClick={() => setExerciseType('distraction')}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '20px',
-                backgroundColor: exerciseType === 'distraction' ? 'rgba(255,255,255,0.2)' : 'transparent',
-                color: 'white',
-                border: '1px solid rgba(255,255,255,0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '0.85rem'
-              }}
-            >
-              <Brain size={14} /> Játék
-            </button>
-            <button 
-              onClick={() => setExerciseType('ai')}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '20px',
-                backgroundColor: exerciseType === 'ai' ? 'rgba(255,255,255,0.2)' : 'transparent',
-                color: 'white',
-                border: '1px solid rgba(255,255,255,0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '0.85rem'
-              }}
-            >
-              <Sparkles size={14} /> AI
-            </button>
-            <button 
-              onClick={() => setExerciseType('buddy')}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '20px',
-                backgroundColor: exerciseType === 'buddy' ? 'rgba(255,255,255,0.2)' : 'transparent',
-                color: 'white',
-                border: '1px solid rgba(255,255,255,0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '0.85rem'
-              }}
-            >
-              <Users size={14} /> Segítő
-            </button>
+        {taps.map(tap => (
+          <div key={tap.id} className="tap-feedback" style={{ left: tap.x, top: tap.y }}></div>
+        ))}
+        
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          padding: '15px',
+          backgroundColor: 'rgba(0,0,0,0.2)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 100
+        }}>
+          <button 
+            onClick={() => {
+              setIsPanicMode(false);
+              setExerciseType('breathing');
+            }}
+            style={{ 
+              backgroundColor: '#FF6B6B', 
+              color: 'white', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px', 
+              padding: '12px 25px', 
+              borderRadius: '15px',
+              fontSize: '1.2rem',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            BEFEJEZÉS
+          </button>
+
+          <div style={{ display: 'flex', gap: '15px' }}>
             <button 
               onClick={() => setShowHelpCard(true)}
               style={{
-                padding: '6px 12px',
-                borderRadius: '20px',
+                width: '60px',
+                height: '60px',
+                borderRadius: '15px',
                 backgroundColor: 'rgba(255,255,255,0.1)',
                 color: 'white',
                 border: '1px solid rgba(255,255,255,0.3)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                fontSize: '0.85rem'
+                justifyContent: 'center'
               }}
             >
-              <MessageSquare size={14} /> Kártya
+              <MessageSquare size={24} />
             </button>
           </div>
-          <button 
-            onClick={() => {
-              setIsPanicMode(false);
-              setIsPostPanic(true);
-            }}
-            style={{ 
-              background: 'transparent', 
-              color: '#F7FAFC', 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '6px',
-              padding: '8px',
-              fontSize: '0.9rem',
-              border: 'none',
-              cursor: 'pointer'
-            }}
-          >
-            Befejezés
-          </button>
         </div>
         
         <div style={{ textAlign: 'center', marginTop: '15px', marginBottom: '15px' }}>
-          <h1 style={{ fontSize: '1.8rem', marginBottom: '5px', color: '#98FF98' }}>Biztonságban vagy</h1>
-          <p style={{ opacity: 0.8, fontSize: '0.9rem' }}>
-            {exerciseType === 'breathing' ? 'Koncentrálj a légzésedre.' : 
-             exerciseType === 'grounding' ? 'Koncentrálj a környezetedre.' : 
-             exerciseType === 'sounds' ? 'Hallgasd a nyugtató hangokat.' :
-             exerciseType === 'safeplace' ? 'Pihenj a biztonságos helyeden.' :
-             exerciseType === 'distraction' ? 'Foglald le az elméd.' :
-             'Nem vagy egyedül.'}
-          </p>
+          <h1 style={{ fontSize: '2.2rem', marginBottom: '5px', color: '#98FF98' }}>BIZTONSÁGBAN VAGY</h1>
         </div>
 
         {!panicIntensity ? (
           <IntensitySelector onSelect={setPanicIntensity} />
         ) : (
           <>
+            <div className="nav-grid" style={{ marginBottom: '30px' }}>
+              <button 
+                onClick={() => setExerciseType('breathing')} 
+                style={{ backgroundColor: exerciseType === 'breathing' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '10px', padding: '15px' }}
+              >
+                <Wind size={24} /> Légzés
+              </button>
+              <button 
+                onClick={() => setExerciseType('grounding')} 
+                style={{ backgroundColor: exerciseType === 'grounding' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '10px', padding: '15px' }}
+              >
+                <Anchor size={24} /> Földelés
+              </button>
+              <button 
+                onClick={() => setExerciseType('ai')} 
+                style={{ backgroundColor: exerciseType === 'ai' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '10px', padding: '15px' }}
+              >
+                <Sparkles size={24} /> AI Segítő
+              </button>
+              <button 
+                onClick={() => setExerciseType('distraction')} 
+                style={{ backgroundColor: exerciseType === 'distraction' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '20px', display: 'flex', alignItems: 'center', gap: '10px', padding: '15px' }}
+              >
+                <Brain size={24} /> Játék
+              </button>
+            </div>
+
             {exerciseType === 'breathing' ? (
               <BreathingCircle intensity={panicIntensity} />
             ) : exerciseType === 'grounding' ? (

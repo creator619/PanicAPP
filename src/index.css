@@ -410,3 +410,52 @@ button {
   line-height: 1.4;
   border: 1px dashed #FEB2B2;
 }
+
+/* --- PANIC-PROOF UI OVERHAUL --- */
+.panic-mode {
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+}
+
+.panic-mode button {
+  min-height: 70px;
+  font-weight: 900 !important;
+  font-size: 1.1rem !important;
+  text-transform: uppercase;
+}
+
+.panic-mode h1, .panic-mode h2 {
+  font-weight: 900 !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.panic-mode .nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  padding: 10px;
+  width: 100%;
+}
+
+.panic-mode .nav-grid button {
+  padding: 20px 10px;
+  flex-direction: column;
+  height: auto;
+}
+
+.tap-feedback {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0);
+  animation: tapEffect 0.6s ease-out;
+  z-index: 9999;
+}
+
+@keyframes tapEffect {
+  from { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+  to { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
