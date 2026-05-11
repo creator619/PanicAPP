@@ -6,7 +6,8 @@ import MoodJournal from './components/MoodJournal';
 import SOSContacts from './components/SOSContacts';
 import HeartRateMonitor from './components/HeartRateMonitor';
 import SafePlace from './components/SafePlace';
-import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music, Activity, ShieldCheck } from 'lucide-react';
+import CognitiveDistraction from './components/CognitiveDistraction';
+import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music, Activity, ShieldCheck, Brain } from 'lucide-react';
 
 function App() {
   const [isPanicMode, setIsPanicMode] = useState(false);
@@ -207,6 +208,22 @@ function App() {
             >
               <ShieldCheck size={14} /> Menedék
             </button>
+            <button 
+              onClick={() => setExerciseType('distraction')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '20px',
+                backgroundColor: exerciseType === 'distraction' ? 'rgba(255,255,255,0.2)' : 'transparent',
+                color: 'white',
+                border: '1px solid rgba(255,255,255,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '0.85rem'
+              }}
+            >
+              <Brain size={14} /> Játék
+            </button>
           </div>
           <button 
             onClick={() => setIsPanicMode(false)}
@@ -232,7 +249,8 @@ function App() {
             {exerciseType === 'breathing' ? 'Koncentrálj a légzésedre.' : 
              exerciseType === 'grounding' ? 'Koncentrálj a környezetedre.' : 
              exerciseType === 'sounds' ? 'Hallgasd a nyugtató hangokat.' :
-             'Pihenj a biztonságos helyeden.'}
+             exerciseType === 'safeplace' ? 'Pihenj a biztonságos helyeden.' :
+             'Foglald le az elméd.'}
           </p>
         </div>
 
@@ -242,8 +260,10 @@ function App() {
           <GroundingExercise onComplete={() => setExerciseType('sounds')} />
         ) : exerciseType === 'sounds' ? (
           <SoundPlayer />
-        ) : (
+        ) : exerciseType === 'safeplace' ? (
           <SafePlace />
+        ) : (
+          <CognitiveDistraction />
         )}
 
         <div style={{ textAlign: 'center', marginTop: 'auto', paddingBottom: '40px', opacity: 0.6 }}>
