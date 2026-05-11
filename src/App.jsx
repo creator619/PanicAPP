@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import BreathingCircle from './components/BreathingCircle';
 import GroundingExercise from './components/GroundingExercise';
 import SoundPlayer from './components/SoundPlayer';
+import MoodJournal from './components/MoodJournal';
+import SOSContacts from './components/SOSContacts';
 import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music } from 'lucide-react';
 
 function App() {
   const [isPanicMode, setIsPanicMode] = useState(false);
   const [exerciseType, setExerciseType] = useState('breathing'); // 'breathing', 'grounding', 'sounds'
+  const [screen, setScreen] = useState('home'); // 'home', 'journal', 'sos'
 
   useEffect(() => {
     if (isPanicMode) {
@@ -16,6 +19,48 @@ function App() {
       setExerciseType('breathing');
     }
   }, [isPanicMode]);
+
+  // Content rendering based on screen
+  const renderContent = () => {
+    switch(screen) {
+      case 'journal':
+        return <MoodJournal />;
+      case 'sos':
+        return <SOSContacts />;
+      default:
+        return (
+          <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <button 
+              onClick={() => setIsPanicMode(true)}
+              style={{
+                width: '260px',
+                height: '260px',
+                borderRadius: '50%',
+                backgroundColor: '#B39EB5',
+                color: 'white',
+                fontSize: '1.8rem',
+                fontWeight: 'bold',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '20px',
+                boxShadow: '0 10px 30px rgba(179, 158, 181, 0.6)',
+                transition: 'transform 0.2s ease-in-out',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+              onMouseDown={e => e.currentTarget.style.transform = 'scale(0.95)'}
+              onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              <HeartPulse size={72} />
+              <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Segítségre van<br/>szükségem</span>
+            </button>
+          </main>
+        );
+    }
+  };
 
   if (isPanicMode) {
     return (
@@ -80,7 +125,9 @@ function App() {
               alignItems: 'center', 
               gap: '6px',
               padding: '8px',
-              fontSize: '0.9rem'
+              fontSize: '0.9rem',
+              border: 'none',
+              cursor: 'pointer'
             }}
           >
             Befejezés
@@ -117,44 +164,54 @@ function App() {
         <h1 style={{ color: '#2D3748', fontSize: '1.8rem', fontWeight: 'bold' }}>Pániksegély</h1>
       </header>
 
-      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <button 
-          onClick={() => setIsPanicMode(true)}
-          style={{
-            width: '260px',
-            height: '260px',
-            borderRadius: '50%',
-            backgroundColor: '#B39EB5',
-            color: 'white',
-            fontSize: '1.8rem',
-            fontWeight: 'bold',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '20px',
-            boxShadow: '0 10px 30px rgba(179, 158, 181, 0.6)',
-            transition: 'transform 0.2s ease-in-out'
-          }}
-          onMouseDown={e => e.currentTarget.style.transform = 'scale(0.95)'}
-          onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-        >
-          <HeartPulse size={72} />
-          <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Segítségre van<br/>szükségem</span>
-        </button>
-      </main>
+      {renderContent()}
 
-      <footer style={{ display: 'flex', justifyContent: 'space-around', padding: '20px 0', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
-        <button style={{ background: 'transparent', color: '#B39EB5', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+      <footer style={{ display: 'flex', justifyContent: 'space-around', padding: '20px 0', borderTop: '1px solid rgba(0,0,0,0.05)', backgroundColor: 'white' }}>
+        <button 
+          onClick={() => setScreen('home')}
+          style={{ 
+            background: 'transparent', 
+            color: screen === 'home' ? '#B39EB5' : '#AEC6CF', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            gap: '8px',
+            border: 'none',
+            cursor: 'pointer'
+          }}
+        >
           <Home size={28} />
           <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>Főoldal</span>
         </button>
-        <button style={{ background: 'transparent', color: '#AEC6CF', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+        <button 
+          onClick={() => setScreen('journal')}
+          style={{ 
+            background: 'transparent', 
+            color: screen === 'journal' ? '#B39EB5' : '#AEC6CF', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            gap: '8px',
+            border: 'none',
+            cursor: 'pointer'
+          }}
+        >
           <Book size={28} />
           <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>Napló</span>
         </button>
-        <button style={{ background: 'transparent', color: '#AEC6CF', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+        <button 
+          onClick={() => setScreen('sos')}
+          style={{ 
+            background: 'transparent', 
+            color: screen === 'sos' ? '#B39EB5' : '#AEC6CF', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            gap: '8px',
+            border: 'none',
+            cursor: 'pointer'
+          }}
+        >
           <Phone size={28} />
           <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>SOS</span>
         </button>
