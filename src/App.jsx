@@ -7,7 +7,8 @@ import SOSContacts from './components/SOSContacts';
 import HeartRateMonitor from './components/HeartRateMonitor';
 import SafePlace from './components/SafePlace';
 import CognitiveDistraction from './components/CognitiveDistraction';
-import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music, Activity, ShieldCheck, Brain } from 'lucide-react';
+import BuddySystem from './components/BuddySystem';
+import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music, Activity, ShieldCheck, Brain, Users } from 'lucide-react';
 
 function App() {
   const [isPanicMode, setIsPanicMode] = useState(false);
@@ -224,6 +225,22 @@ function App() {
             >
               <Brain size={14} /> Játék
             </button>
+            <button 
+              onClick={() => setExerciseType('buddy')}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '20px',
+                backgroundColor: exerciseType === 'buddy' ? 'rgba(255,255,255,0.2)' : 'transparent',
+                color: 'white',
+                border: '1px solid rgba(255,255,255,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '0.85rem'
+              }}
+            >
+              <Users size={14} /> Segítő
+            </button>
           </div>
           <button 
             onClick={() => setIsPanicMode(false)}
@@ -250,7 +267,8 @@ function App() {
              exerciseType === 'grounding' ? 'Koncentrálj a környezetedre.' : 
              exerciseType === 'sounds' ? 'Hallgasd a nyugtató hangokat.' :
              exerciseType === 'safeplace' ? 'Pihenj a biztonságos helyeden.' :
-             'Foglald le az elméd.'}
+             exerciseType === 'distraction' ? 'Foglald le az elméd.' :
+             'Nem vagy egyedül.'}
           </p>
         </div>
 
@@ -262,8 +280,10 @@ function App() {
           <SoundPlayer />
         ) : exerciseType === 'safeplace' ? (
           <SafePlace />
-        ) : (
+        ) : exerciseType === 'distraction' ? (
           <CognitiveDistraction />
+        ) : (
+          <BuddySystem />
         )}
 
         <div style={{ textAlign: 'center', marginTop: 'auto', paddingBottom: '40px', opacity: 0.6 }}>
