@@ -10,7 +10,8 @@ import CognitiveDistraction from './components/CognitiveDistraction';
 import BuddySystem from './components/BuddySystem';
 import BlindFlightModal from './components/BlindFlightModal';
 import PostPanicCare from './components/PostPanicCare';
-import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music, Activity, ShieldCheck, Brain, Users } from 'lucide-react';
+import DigitalHelpCard from './components/DigitalHelpCard';
+import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music, Activity, ShieldCheck, Brain, Users, MessageSquare } from 'lucide-react';
 
 function App() {
   const [isPanicMode, setIsPanicMode] = useState(false);
@@ -22,6 +23,7 @@ function App() {
   const [showHRPrompt, setShowHRPrompt] = useState(false);
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [showBlindFlight, setShowBlindFlight] = useState(false);
+  const [showHelpCard, setShowHelpCard] = useState(false);
 
   useEffect(() => {
     if (isPanicMode) {
@@ -286,6 +288,22 @@ function App() {
             >
               <Users size={14} /> Segítő
             </button>
+            <button 
+              onClick={() => setShowHelpCard(true)}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '20px',
+                backgroundColor: 'rgba(255,255,255,0.1)',
+                color: 'white',
+                border: '1px solid rgba(255,255,255,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '0.85rem'
+              }}
+            >
+              <MessageSquare size={14} /> Kártya
+            </button>
           </div>
           <button 
             onClick={() => {
@@ -346,6 +364,10 @@ function App() {
               setLastActivity(Date.now());
             }} 
           />
+        )}
+
+        {showHelpCard && (
+          <DigitalHelpCard onCancel={() => setShowHelpCard(false)} />
         )}
       </div>
     );
