@@ -10,10 +10,11 @@ const PostPanicCare = ({ onComplete }) => {
   ]);
 
   const [cardIndex, setCardIndex] = useState(0);
+  const [activeHint, setActiveHint] = useState(null);
   const flashcards = [
-    { q: 'Ettél ma?', hint: 'Próbálj meg pár falat kekszet vagy gyümölcsöt enni.' },
-    { q: 'Vettél be gyógyszert?', hint: 'Ha van orvos által felírt gyógyszered, ellenőrizd, beszedted-e.' },
-    { q: 'Van nálad víz?', hint: 'Töltsd meg a kulacsodat vagy tarts egy pohár vizet a közeledben.' }
+    { q: 'Ettél ma?', hint: 'Próbálj meg pár falat kekszet vagy gyümölcsöt enni. Az alacsony vércukorszint fokozhatja a szorongást.' },
+    { q: 'Vettél be gyógyszert?', hint: 'Ha van orvos által felírt gyógyszered, ellenőrizd, beszedted-e. A rendszeresség kulcsfontosságú.' },
+    { q: 'Van nálad víz?', hint: 'Töltsd meg a kulacsodat vagy tarts egy pohár vizet a közeledben. A kortyolgatás segít a megnyugvásban.' }
   ];
 
   const toggleTask = (id) => {
@@ -143,8 +144,7 @@ const PostPanicCare = ({ onComplete }) => {
               </button>
               <button 
                 onClick={() => {
-                  alert(flashcards[cardIndex].hint);
-                  setCardIndex(cardIndex + 1);
+                  setActiveHint(flashcards[cardIndex].hint);
                 }}
                 className="bounce-click"
                 style={{
@@ -211,6 +211,55 @@ const PostPanicCare = ({ onComplete }) => {
           </button>
         </div>
       </div>
+
+      {activeHint && (
+        <div className="modal-overlay" style={{ zIndex: 1100 }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '30px',
+            borderRadius: '25px',
+            width: '90%',
+            maxWidth: '350px',
+            textAlign: 'center',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
+            animation: 'swipeIn 0.4s ease'
+          }}>
+            <div style={{ 
+              backgroundColor: 'rgba(179, 158, 181, 0.1)', 
+              width: '60px', 
+              height: '60px', 
+              borderRadius: '50%', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              margin: '0 auto 20px'
+            }}>
+              <HelpCircle size={30} color="#B39EB5" />
+            </div>
+            <p style={{ color: '#2D3748', fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '25px' }}>
+              {activeHint}
+            </p>
+            <button 
+              onClick={() => {
+                setActiveHint(null);
+                setCardIndex(cardIndex + 1);
+              }}
+              style={{
+                backgroundColor: '#B39EB5',
+                color: 'white',
+                width: '100%',
+                padding: '15px',
+                borderRadius: '15px',
+                fontWeight: 'bold',
+                border: 'none',
+                fontSize: '1rem'
+              }}
+            >
+              Értem, köszönöm
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
