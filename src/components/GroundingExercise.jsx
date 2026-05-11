@@ -109,9 +109,9 @@ const GroundingExercise = ({ onComplete, intensity }) => {
         <button 
           onClick={nextStep}
           style={{
-            marginTop: '30px',
+            marginTop: '15px',
             width: '100%',
-            padding: '25px',
+            padding: '15px',
             borderRadius: '20px',
             backgroundColor: current.color,
             color: '#1a202c',

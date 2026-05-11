@@ -203,7 +203,7 @@ function App() {
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center', 
-          padding: '15px 20px',
+          padding: '10px 20px',
           backgroundColor: 'rgba(0,0,0,0.3)',
           borderBottom: '1px solid rgba(255,255,255,0.1)',
           zIndex: 1000
@@ -246,7 +246,7 @@ function App() {
         </div>
         
         <div className="panic-content-area">
-          <h1 style={{ fontSize: '2.2rem', marginBottom: '20px', color: '#98FF98', textAlign: 'center' }}>
+          <h1 style={{ fontSize: '1.8rem', marginBottom: '15px', color: '#98FF98', textAlign: 'center' }}>
             BIZTONSÁGBAN VAGY
           </h1>
 
@@ -279,25 +279,25 @@ function App() {
         {panicIntensity && (
           <div className="panic-bottom-nav">
             <button onClick={() => setExerciseType('breathing')} className={`nav-tile ${exerciseType === 'breathing' ? 'active' : ''}`}>
-              <Wind size={28} /> Légzés
+              <Wind size={24} /> Légzés
             </button>
             <button onClick={() => setExerciseType('grounding')} className={`nav-tile ${exerciseType === 'grounding' ? 'active' : ''}`}>
-              <Anchor size={28} /> Földelés
+              <Anchor size={24} /> Földelés
             </button>
             <button onClick={() => setExerciseType('sounds')} className={`nav-tile ${exerciseType === 'sounds' ? 'active' : ''}`}>
-              <Music size={28} /> Hangok
+              <Music size={24} /> Hangok
             </button>
             <button onClick={() => setExerciseType('safeplace')} className={`nav-tile ${exerciseType === 'safeplace' ? 'active' : ''}`}>
-              <ShieldCheck size={28} /> Menedék
+              <ShieldCheck size={24} /> Menedék
             </button>
             <button onClick={() => setExerciseType('ai')} className={`nav-tile ${exerciseType === 'ai' ? 'active' : ''}`}>
-              <Sparkles size={28} /> AI Segítő
+              <Sparkles size={24} /> AI Segítő
             </button>
             <button onClick={() => setExerciseType('distraction')} className={`nav-tile ${exerciseType === 'distraction' ? 'active' : ''}`}>
-              <Brain size={28} /> Játék
+              <Brain size={24} /> Játék
             </button>
             <button onClick={() => setExerciseType('buddy')} className={`nav-tile ${exerciseType === 'buddy' ? 'active' : ''}`}>
-              <Users size={28} /> Segítő
+              <Users size={24} /> Segítő
             </button>
           </div>
         )}
