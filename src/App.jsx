@@ -1,22 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import BreathingCircle from './components/BreathingCircle';
-import { HeartPulse, Home, Phone, Book } from 'lucide-react';
+import GroundingExercise from './components/GroundingExercise';
+import { HeartPulse, Home, Phone, Book, Wind, Anchor } from 'lucide-react';
 
 function App() {
   const [isPanicMode, setIsPanicMode] = useState(false);
+  const [exerciseType, setExerciseType] = useState('breathing'); // 'breathing' or 'grounding'
 
   useEffect(() => {
     if (isPanicMode) {
       document.body.classList.add('panic-mode');
     } else {
       document.body.classList.remove('panic-mode');
+      setExerciseType('breathing');
     }
   }, [isPanicMode]);
 
   if (isPanicMode) {
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', padding: '20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button 
+              onClick={() => setExerciseType('breathing')}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '20px',
+                backgroundColor: exerciseType === 'breathing' ? 'rgba(255,255,255,0.2)' : 'transparent',
+                color: 'white',
+                border: '1px solid rgba(255,255,255,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '0.9rem'
+              }}
+            >
+              <Wind size={16} /> Légzés
+            </button>
+            <button 
+              onClick={() => setExerciseType('grounding')}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '20px',
+                backgroundColor: exerciseType === 'grounding' ? 'rgba(255,255,255,0.2)' : 'transparent',
+                color: 'white',
+                border: '1px solid rgba(255,255,255,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '0.9rem'
+              }}
+            >
+              <Anchor size={16} /> Földelés
+            </button>
+          </div>
           <button 
             onClick={() => setIsPanicMode(false)}
             style={{ 
@@ -35,10 +72,16 @@ function App() {
         
         <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '20px' }}>
           <h1 style={{ fontSize: '2rem', marginBottom: '10px', color: '#98FF98' }}>Biztonságban vagy</h1>
-          <p style={{ opacity: 0.8 }}>Koncentrálj a légzésedre.</p>
+          <p style={{ opacity: 0.8 }}>
+            {exerciseType === 'breathing' ? 'Koncentrálj a légzésedre.' : 'Koncentrálj a környezetedre.'}
+          </p>
         </div>
 
-        <BreathingCircle />
+        {exerciseType === 'breathing' ? (
+          <BreathingCircle />
+        ) : (
+          <GroundingExercise onComplete={() => setExerciseType('breathing')} />
+        )}
 
         <div style={{ textAlign: 'center', marginTop: 'auto', paddingBottom: '40px', opacity: 0.6 }}>
           <p style={{ fontSize: '1.2rem' }}>Ez csak egy roham. El fog múlni.</p>
