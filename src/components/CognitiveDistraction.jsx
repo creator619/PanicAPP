@@ -41,61 +41,74 @@ const CognitiveDistraction = () => {
       setMathFeedback('wrong');
       setStreak(0);
     }
-  };
-
-  // Color Finder Logic
+    // Color Finder Logic
   const startColorFinder = () => {
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
     setTargetColor(randomColor);
     setCapturedImage(null);
+    setCameraActive(false);
   };
 
-  const startCamera = async () => {
-    setCameraActive(true);
-    setCapturedImage(null);
-    
-    const constraints = {
-      video: { 
-        facingMode: { ideal: 'environment' },
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
+  useEffect(() => {
+    let currentStream = null;
+
+    const initCamera = async () => {
+      if (cameraActive && videoRef.current && !capturedImage) {
+        const constraints = {
+          video: { 
+            facingMode: { ideal: 'environment' },
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        };
+
+        try {
+          currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+          if (videoRef.current) {
+            videoRef.current.srcObject = currentStream;
+            videoRef.current.onloadedmetadata = () => {
+              if (videoRef.current) {
+                videoRef.current.play().catch(e => console.error("Video play error:", e));
+              }
+            };
+          }
+        } catch (err) {
+          console.error("Camera error:", err);
+          try {
+            currentStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            if (videoRef.current) {
+              videoRef.current.srcObject = currentStream;
+              videoRef.current.onloadedmetadata = () => {
+                if (videoRef.current) {
+                  videoRef.current.play().catch(e => console.error("Video play error:", e));
+                }
+              };
+            }
+          } catch (fallbackErr) {
+            console.error("Fallback camera error:", fallbackErr);
+            alert("Nem sikerült elérni a kamerát. Kérlek, engedélyezd a hozzáférést!");
+            setCameraActive(false);
+          }
+        }
       }
     };
 
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        // Explicitly call play for better compatibility
-        videoRef.current.onloadedmetadata = () => {
-          videoRef.current.play().catch(e => console.error("Video play error:", e));
-        };
+    initCamera();
+
+    return () => {
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
       }
-    } catch (err) {
-      console.error("Camera error:", err);
-      // Fallback to any available camera if 'environment' fails
-      try {
-        const fallbackStream = await navigator.mediaDevices.getUserMedia({ video: true });
-        if (videoRef.current) {
-          videoRef.current.srcObject = fallbackStream;
-          videoRef.current.onloadedmetadata = () => {
-            videoRef.current.play().catch(e => console.error("Video play error:", e));
-          };
-        }
-      } catch (fallbackErr) {
-        console.error("Fallback camera error:", fallbackErr);
-        alert("Nem sikerült elérni a kamerát. Kérlek, engedélyezd a hozzáférést a böngésző beállításaiban!");
-        setCameraActive(false);
-      }
-    }
+    };
+  }, [cameraActive, capturedImage]);
+
+  const startCamera = () => {
+    setCameraActive(true);
+    setCapturedImage(null);
   };
 
   const stopCamera = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const tracks = videoRef.current.srcObject.getTracks();
-      tracks.forEach(track => track.stop());
-      setCameraActive(false);
-    }
+    setCameraActive(false);
   };
 
   const capturePhoto = () => {
@@ -106,7 +119,7 @@ const CognitiveDistraction = () => {
       context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
       const dataUrl = canvasRef.current.toDataURL('image/png');
       setCapturedImage(dataUrl);
-      stopCamera();
+      setCameraActive(false);
     }
   };
 
