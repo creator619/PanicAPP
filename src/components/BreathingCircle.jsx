@@ -10,11 +10,34 @@ const BreathingCircle = () => {
     // 9-10s: Hold
     let timeoutIds = [];
     
+    const vibrate = (pattern) => {
+      if ('vibrate' in navigator) {
+        navigator.vibrate(pattern);
+      }
+    };
+
     const cycle = () => {
+      // Inhale starts
       setPhase('Vegyél mély levegőt...');
-      timeoutIds.push(setTimeout(() => setPhase('Tartsd bent...'), 4000));
-      timeoutIds.push(setTimeout(() => setPhase('Fújd ki lassan...'), 5000));
-      timeoutIds.push(setTimeout(() => setPhase('Tartsd bent...'), 9000));
+      vibrate(100); 
+
+      timeoutIds.push(setTimeout(() => {
+        // Hold starts
+        setPhase('Tartsd bent...');
+        vibrate([50, 100, 50]); 
+      }, 4000));
+
+      timeoutIds.push(setTimeout(() => {
+        // Exhale starts
+        setPhase('Fújd ki lassan...');
+        vibrate(300); 
+      }, 5000));
+
+      timeoutIds.push(setTimeout(() => {
+        // Hold starts
+        setPhase('Tartsd bent...');
+        vibrate(50);
+      }, 9000));
     };
 
     cycle();

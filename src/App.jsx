@@ -4,12 +4,16 @@ import GroundingExercise from './components/GroundingExercise';
 import SoundPlayer from './components/SoundPlayer';
 import MoodJournal from './components/MoodJournal';
 import SOSContacts from './components/SOSContacts';
-import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music } from 'lucide-react';
+import HeartRateMonitor from './components/HeartRateMonitor';
+import { HeartPulse, Home, Phone, Book, Wind, Anchor, Music, Activity } from 'lucide-react';
 
 function App() {
   const [isPanicMode, setIsPanicMode] = useState(false);
   const [exerciseType, setExerciseType] = useState('breathing'); // 'breathing', 'grounding', 'sounds'
   const [screen, setScreen] = useState('home'); // 'home', 'journal', 'sos'
+  const [showHRMonitor, setShowHRMonitor] = useState(false);
+  const [lastBpm, setLastBpm] = useState(null);
+  const [showHRPrompt, setShowHRPrompt] = useState(false);
 
   useEffect(() => {
     if (isPanicMode) {
@@ -20,6 +24,13 @@ function App() {
     }
   }, [isPanicMode]);
 
+  const handleHRResult = (bpm) => {
+    setLastBpm(bpm);
+    if (bpm > 100) {
+      setShowHRPrompt(true);
+    }
+  };
+
   // Content rendering based on screen
   const renderContent = () => {
     switch(screen) {
@@ -29,22 +40,54 @@ function App() {
         return <SOSContacts />;
       default:
         return (
-          <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '30px' }}>
+            {showHRPrompt && (
+              <div style={{ 
+                backgroundColor: 'white', 
+                padding: '20px', 
+                borderRadius: '20px', 
+                boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                width: '100%',
+                maxWidth: '320px',
+                textAlign: 'center',
+                animation: 'slideUp 0.5s ease'
+              }}>
+                <p style={{ fontWeight: 'bold', marginBottom: '10px' }}>Minden rendben?</p>
+                <p style={{ fontSize: '0.9rem', color: '#4A5568', marginBottom: '15px' }}>
+                  Úgy látom, kicsit felgyorsult a szívverésed ({lastBpm} BPM). Szeretnél egy 1 perces légzőgyakorlatot?
+                </p>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button 
+                    onClick={() => { setIsPanicMode(true); setShowHRPrompt(false); }}
+                    style={{ flex: 1, backgroundColor: '#B39EB5', color: 'white', padding: '10px', borderRadius: '10px', fontWeight: 'bold' }}
+                  >
+                    Igen
+                  </button>
+                  <button 
+                    onClick={() => setShowHRPrompt(false)}
+                    style={{ flex: 1, backgroundColor: '#EDF2F7', color: '#4A5568', padding: '10px', borderRadius: '10px' }}
+                  >
+                    Most nem
+                  </button>
+                </div>
+              </div>
+            )}
+
             <button 
               onClick={() => setIsPanicMode(true)}
               style={{
-                width: '260px',
-                height: '260px',
+                width: '240px',
+                height: '240px',
                 borderRadius: '50%',
                 backgroundColor: '#B39EB5',
                 color: 'white',
-                fontSize: '1.8rem',
+                fontSize: '1.6rem',
                 fontWeight: 'bold',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '20px',
+                gap: '15px',
                 boxShadow: '0 10px 30px rgba(179, 158, 181, 0.6)',
                 transition: 'transform 0.2s ease-in-out',
                 border: 'none',
@@ -52,11 +95,35 @@ function App() {
               }}
               onMouseDown={e => e.currentTarget.style.transform = 'scale(0.95)'}
               onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
             >
-              <HeartPulse size={72} />
+              <HeartPulse size={64} />
               <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Segítségre van<br/>szükségem</span>
             </button>
+
+            <button 
+              onClick={() => setShowHRMonitor(true)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                backgroundColor: 'white',
+                padding: '12px 25px',
+                borderRadius: '30px',
+                color: '#4A5568',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+                border: '1px solid #EDF2F7'
+              }}
+            >
+              <Activity size={20} color="#FF6B6B" /> Pulzusmérés
+            </button>
+
+            {showHRMonitor && (
+              <HeartRateMonitor 
+                onResult={handleHRResult} 
+                onCancel={() => setShowHRMonitor(false)} 
+              />
+            )}
           </main>
         );
     }
@@ -65,6 +132,14 @@ function App() {
   if (isPanicMode) {
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', padding: '20px' }}>
+        <style>
+          {`
+            @keyframes slideUp {
+              from { opacity: 0; transform: translateY(20px); }
+              to { opacity: 1; transform: translateY(0); }
+            }
+          `}
+        </style>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             <button 
