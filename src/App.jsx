@@ -41,6 +41,8 @@ function App() {
         return <MoodJournal />;
       case 'sos':
         return <SOSContacts />;
+      case 'buddy':
+        return <BuddySystem />;
       default:
         return (
           <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '30px' }}>
@@ -127,6 +129,10 @@ function App() {
                 onCancel={() => setShowHRMonitor(false)} 
               />
             )}
+
+            <div style={{ marginTop: 'auto', opacity: 0.3, fontSize: '0.7rem' }}>
+              v1.2 - Közösségi mód
+            </div>
           </main>
         );
     }
@@ -349,6 +355,22 @@ function App() {
         >
           <Phone size={28} />
           <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>SOS</span>
+        </button>
+        <button 
+          onClick={() => setScreen('buddy')}
+          style={{ 
+            background: 'transparent', 
+            color: screen === 'buddy' ? '#FF6B6B' : '#AEC6CF', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            gap: '8px',
+            border: 'none',
+            cursor: 'pointer'
+          }}
+        >
+          <Users size={28} />
+          <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>Segítő</span>
         </button>
       </footer>
     </div>
